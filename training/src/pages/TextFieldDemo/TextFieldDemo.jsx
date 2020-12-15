@@ -1,18 +1,19 @@
 import React from 'react';
-
 import { TextField } from '../../components';
-
+import { Slider } from '../../components/Slider';
+import { banners } from '../../config/constants';
 import { Div } from '../../components/TextField/style';
-
 const TextFieldDemo = () => (
-  <Div>
-    <p><b>This is a Disabled Input</b></p>
-    <TextField disabled value="disabled input" />
-    <p><b> A Valid Inpu</b></p>
-    <TextField value="accessible" />
-    <p><b>An input with Errors </b></p>
-    <TextField error="Could not be more than" value="101" />
-  </Div>
+<Div>
+<div>
+<Slider alt="No Image" duration="1000" height="300" random banner={banners} />
+</div>
+<p><b>This is a Disabled Input</b></p>
+<TextField disabled="This is disable" value="disabled input" />
+<p><b> A Valid Inpu</b></p>
+<TextField value="accessible" />
+<p><b>An input with Errors </b></p>
+<TextField error="Could not be more than" value="101" />
+</Div>
 );
-
 export default TextFieldDemo;

@@ -3,12 +3,14 @@ import styled, { css } from 'styled-components';
 const Div = styled.div`
 margin: 2px;
 border: 0.1px solid black;
+box-shadow: 5px 10px 18px rgb(214, 212, 212);
+
 `;
 const Error = styled.p`
 color: red;
 `;
 const Input = styled.input`
-width: 100%;
+width: 98.2%;
 padding: 0.7%;
 border: 1px solid gray;
 border-radius: 5px;
