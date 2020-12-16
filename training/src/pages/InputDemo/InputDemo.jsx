@@ -1,6 +1,6 @@
 import React from 'react';
 import { TextField, SelectField, RadioField } from '../../components';
-import { selectOptions, radioOptionsCricket, radioOptionsFootball } from '../../configs/constants';
+import { selectOptions, radioOptionsCricket, radioOptionsFootball } from '../../config/constants';
 
 class InputDemo extends React.Component {
   constructor(props) {
