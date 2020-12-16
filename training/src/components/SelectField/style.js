@@ -3,10 +3,13 @@ import styled, { css } from 'styled-components';
 const Select = styled.select`
 width: 100%;
 padding: 1%;
-border-radius: 5px;
 ${(props) => props.error
   && css`
-  border: 1px solid red;
+  border: 1px solid black;
   `};
 `;
-export { Select };
+
+const Err = styled.p`
+color: red;
+`;
+export { Select, Err };
