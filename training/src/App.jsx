@@ -1,10 +1,12 @@
-// import { render } from '@testing-library/react';
 import React from 'react';
-import { InputDemo } from './pages/InputDemo';
+// import { TextFieldDemo } from './pages/index';
+// import { InputDemo } from './pages/InputDemo';
+import { ChildrenDemo } from './pages';
 
 function App() {
   return (
-    <InputDemo />
+    <ChildrenDemo />
   );
 }
+
 export default App;
