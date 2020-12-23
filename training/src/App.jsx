@@ -1,10 +1,13 @@
-// import { render } from '@testing-library/react';
 import React from 'react';
-import { InputDemo } from './pages/InputDemo';
+// import { TextFieldDemo } from './pages/index';
+// import { InputDemo } from './pages/InputDemo';
+// import { ChildrenDemo } from './pages';
+import { Trainee } from './pages';
 
 function App() {
   return (
-    <InputDemo />
+    <Trainee />
   );
 }
+
 export default App;
