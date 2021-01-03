@@ -20,7 +20,7 @@ const passwordStyle = () => ({
 
 const constant = {
   Name: Person,
-  Email,
+  Email: Email,
   Password: VisibilityOff,
   'Confirm Password': VisibilityOff,
 };

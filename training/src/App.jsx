@@ -2,12 +2,12 @@ import React from 'react';
 // import { TextFieldDemo } from './pages/index';
 // import { InputDemo } from './pages/InputDemo';
 // import { ChildrenDemo } from './pages';
-import { Trainee } from './pages';
+// import { Login } from './pages/Login';
+import { Login } from './pages/Login';
 
-function App() {
-  return (
-    <Trainee />
-  );
-}
+const App = () => (
+  <Login />
+  //<Trainee />
+);
 
 export default App;
