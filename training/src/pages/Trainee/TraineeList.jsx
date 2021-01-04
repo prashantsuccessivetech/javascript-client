@@ -1,9 +1,9 @@
-/* eslint-disable no-console */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Button, withStyles } from '@material-ui/core';
 import { AddDialog } from './components/index';
+import { TableComponent } from '../../components';
 import trainees from './Data/trainee';
 
 const useStyles = (theme) => ({
@@ -37,6 +37,7 @@ class TraineeList extends React.Component {
     this.setState({
       open: false,
     }, () => {
+      // eslint-disable-next-line no-console
       console.log(data);
     });
   }
@@ -47,10 +48,29 @@ class TraineeList extends React.Component {
     return (
       <>
         <div className={classes.root}>
-          <Button variant="outlined" color="primary" onClick={this.handleClickOpen}>
-            ADD TRAINEELIST
-          </Button>
-          <AddDialog open={open} onClose={this.handleClose} onSubmit={() => this.handleSubmit} />
+          <div className={classes.dialog}>
+            <Button variant="outlined" color="primary" onClick={this.handleClickOpen}>
+              ADD TRAINEELIST
+            </Button>
+            <AddDialog open={open} onClose={this.handleClose} onSubmit={() => this.handleSubmit} />
+          </div>
+          <TableComponent
+            id="id"
+            data={trainees}
+            column={
+              [
+                {
+                  field: 'name',
+                  label: 'Name',
+                  align: 'center',
+                },
+                {
+                  field: 'email',
+                  label: 'Email Address',
+                },
+              ]
+            }
+          />
           <ul>
             {trainees.map(({ name, id }) => (
               <li key={id}>
