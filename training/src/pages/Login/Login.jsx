@@ -1,151 +1,201 @@
+/* eslint-disable no-console */
+/* eslint-disable react/sort-comp */
 import React from 'react';
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import TextField from '@material-ui/core/TextField';
+import Box from '@material-ui/core/Box';
+import { Container, InputAdornment } from '@material-ui/core/';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import Typography from '@material-ui/core/Typography';
+import { Email } from '@material-ui/icons';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import * as yup from 'yup';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
 import PropTypes from 'prop-types';
-import {
-  TextField, CssBaseline, Card, Typography, Avatar,
-  CardContent, withStyles, InputAdornment, Button,
-} from '@material-ui/core';
-import { Email, VisibilityOff, LockOutlined } from '@material-ui/icons';
+import { SnackBarContext } from '../../contexts';
+import callApi from '../../libs/utils/api';
 
-const Design = (theme) => ({
-  icon: {
-    background: 'red',
-    marginLeft: theme.spacing(22),
-    marginTop: theme.spacing(2),
-  },
-  main: {
-    width: 400,
-    marginTop: theme.spacing(20),
-    marginLeft: theme.spacing(58),
-  },
-});
 class Login extends React.Component {
-    schema = yup.object().shape({
-      email: yup.string()
-        .trim().email().required('Email Address is a required field'),
-      password: yup.string()
-        .required('Password is required')
-        .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})/, 'Must contain 8 characters, at least one uppercase letter, one lowercase letter and one number'),
-    });
-
-    constructor(props) {
-      super(props);
-      this.state = {
-        Email: '',
-        Password: '',
-        touched: {
-          email: false,
-          password: false,
-        },
-      };
-    }
-
-    handleChange = (key) => ({ target: { value } }) => {
-      this.setState({ [key]: value });
+  constructor() {
+    super();
+    this.state = {
+      loading: false,
+      touched: {
+        email: false,
+        password: false,
+      },
     };
+  }
 
-    hasErrors = () => {
+  schema = yup.object().shape({
+    email: yup.string()
+      .required()
+      .email(),
+    password: yup.string()
+      .required('password is missing')
+      .min(8, 'minimum 8 characters'),
+  })
+
+  getError(field) {
+    const { touched } = this.state;
+    if (touched[field] && this.hasErrors()) {
       try {
-        this.schema.validateSync(this.state);
+        this.schema.validateSyncAt(field, this.state);
       } catch (err) {
-        return true;
+        return err.message;
       }
-      return false;
     }
+    return null;
+  }
 
-    // eslint-disable-next-line consistent-return
-    getError = (field) => {
-      const { touched } = this.state;
-      if (touched[field] && this.hasErrors()) {
-        try {
-          this.schema.validateSyncAt(field, this.state);
-          return '';
-        } catch (err) {
-          return err.message;
-        }
-      }
+  hasErrors() {
+    try {
+      this.schema.validateSync(this.state);
+    } catch (err) {
+      return true;
+    }
+    return false;
+  }
+
+  isTouched(field) {
+    const { touched } = this.state;
+    this.setState({
+      touched: {
+        ...touched,
+        [field]: true,
+      },
+    });
+  }
+
+  submit = async (e, openSnackBar) => {
+    e.preventDefault();
+    const { history } = this.props;
+    const { email, password } = this.state;
+    await callApi('/user/login', 'POST', { email, password })
+      .then((response) => {
+        localStorage.setItem('token', response.data.data);
+        openSnackBar('Login successfully', 'Success');
+        history.push('/trainee');
+      })
+      .catch(() => {
+        this.setState({
+          email: '',
+          password: '',
+          loading: false,
+          touched: {
+            email: false,
+            password: false,
+          },
+        });
+        openSnackBar('Invalid User', 'error');
+      });
+  }
+
+  loadingHandler = () => {
+    const { loading } = this.state;
+    if (!loading) {
+      this.setState({ loading: true });
+    }
+  }
+
+  render() {
+    const { email, password, loading } = this.state;
+
+    const handleEmailChange = (event) => {
+      this.setState({ email: event.target.value }, () => {
+        console.log(this.state);
+      });
     };
 
-    isTouched = (field) => {
-      const { touched } = this.state;
-      this.setState({
-        touched: {
-          ...touched,
-          [field]: true,
-        },
+    const handlePasswordChange = (event) => {
+      this.setState({ password: event.target.value }, () => {
+        console.log(this.state);
       });
-    }
+    };
 
-    render() {
-      const { classes } = this.props;
-      return (
-        <>
-          <div className={classes.main}>
+    return (
+      <SnackBarContext.Consumer>
+        {(value) => (
+          <Container component="main" maxWidth="xs">
             <CssBaseline />
-            <Card open aria-labelledby="form-dialog-title">
-              <Avatar className={classes.icon}>
-                <LockOutlined />
+            <Box boxShadow={3} maxWidth="lg" p={2} mt={15}>
+              <Avatar style={{ backgroundColor: 'red', margin: 'auto' }}>
+                <LockOutlinedIcon />
               </Avatar>
-              <Typography variant="h3" align="center">Login</Typography>
-              <CardContent>
-                <form>
-                  <div>
-                    <TextField
-                      required
-                      fullWidth
-                      id="outlined-required"
-                      label="Email Address"
-                      defaultValue=" "
-                      variant="outlined"
-                      helperText={this.getError('email')}
-                      error={!!this.getError('email')}
-                      onChange={this.handleChange('email')}
-                      onBlur={() => this.isTouched('email')}
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <Email />
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
-                  </div>
-                  <br />
-                  <div>
-                    <TextField
-                      required
-                      type="password"
-                      fullWidth
-                      id="outlined-required"
-                      label="Password"
-                      defaultValue=" "
-                      variant="outlined"
-                      helperText={this.getError('password')}
-                      error={!!this.getError('password')}
-                      onChange={this.handleChange('password')}
-                      onBlur={() => this.isTouched('password')}
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <VisibilityOff />
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
-                  </div>
-                &nbsp;
-                  <div>
-                    <Button variant="contained" color="primary" disabled={this.hasErrors()} fullWidth>SIGN IN</Button>
-                  </div>
-                </form>
-              </CardContent>
-            </Card>
-          </div>
-        </>
-      );
-    }
+              <Typography component="h1" variant="h5" align="center" style={{ marginBottom: '30px' }}>
+                Login
+              </Typography>
+              <form onSubmit={(event) => this.submit(event, value)}>
+                <TextField
+                  value={email}
+                  error={this.getError('email')}
+                  onBlur={() => { this.isTouched('email'); }}
+                  onChange={handleEmailChange}
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  autoComplete="email"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Email />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+                <div><p style={{ color: 'red', marginTop: '0px' }}>{ this.getError('email')}</p></div>
+                <TextField
+                  value={password}
+                  error={this.getError('password')}
+                  onBlur={() => { this.isTouched('password'); }}
+                  onChange={handlePasswordChange}
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <VisibilityOffIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+                <div><p style={{ color: 'red', marginTop: '0px' }}>{ this.getError('password')}</p></div>
+                <Button
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  disabled={this.hasErrors()}
+                  style={{ marginTop: '20px' }}
+                  type="submit"
+                  onClick={this.loadingHandler}
+                >
+                  Sign In
+                  {loading && (<CircularProgress size={21} color="secondary" />)}
+                </Button>
+              </form>
+            </Box>
+          </Container>
+        )}
+      </SnackBarContext.Consumer>
+    );
+  }
 }
 Login.propTypes = {
-  classes: PropTypes.objectOf(PropTypes.string).isRequired,
+  history: PropTypes.objectOf(PropTypes.any).isRequired,
 };
-export default withStyles(Design)(Login);
+
+export default Login;
