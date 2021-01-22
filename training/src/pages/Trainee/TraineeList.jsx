@@ -1,11 +1,13 @@
+/* eslint-disable react/no-unused-prop-types */
+/* eslint-disable no-console */
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { AddDialog, EditDialog, DeleteDialog } from './components';
 import trainees from './Data/trainee';
 import { TableComponent } from '../../components/index';
 import { getFormattedDate } from '../../libs/utils/getFormatedDate';
-
 
 const asend = 'asc';
 const dsend = 'desc';
@@ -154,5 +156,7 @@ class TraineeList extends Component {
     );
   }
 }
-
+TraineeList.propTypes = {
+  match: PropTypes.objectOf(PropTypes.any).isRequired,
+};
 export default TraineeList;
