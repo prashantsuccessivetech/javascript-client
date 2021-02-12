@@ -27,6 +27,8 @@ export default function MyTable(props) {
     id, data, column, order, orderBy, count, page, onPageChange, rowsPerPage, actions,
   } = props;
 
+  console.log(data, 'here');
+
   const handleSort = (field) => () => {
     const { onSort } = props;
     onSort(field);

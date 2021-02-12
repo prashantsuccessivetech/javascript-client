@@ -76,7 +76,9 @@ class Login extends React.Component {
     const { email, password } = this.state;
     await callApi('/user/login', 'POST', { email, password })
       .then((response) => {
+        console.log(response.data);
         localStorage.setItem('token', response.data.data);
+        console.log(localStorage.getItem('token'))
         openSnackBar('Login successfully', 'Success');
         history.push('/trainee');
       })

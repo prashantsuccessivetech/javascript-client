@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Error, Input } from './style';
+import { Input } from './style';
 
 const TextField = (props) => {
   const {
@@ -10,7 +10,7 @@ const TextField = (props) => {
     return (
       <>
         <Input type="text" value={value} error onChange={onChange} onBlur={onBlur} />
-        <Error>{error}</Error>
+        {/* <Error>{error}</Error> */}
       </>
     );
   }
@@ -22,12 +22,12 @@ export default TextField;
 TextField.propTypes = {
   value: PropTypes.string.isRequired,
   disabled: PropTypes.bool,
-  error: PropTypes.string,
+  error: PropTypes.bool,
   onChange: PropTypes.func,
   onBlur: PropTypes.string.isRequired,
 };
 TextField.defaultProps = {
   disabled: false,
-  error: '',
+  error: false,
   onChange: '',
 };
