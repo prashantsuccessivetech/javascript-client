@@ -16,6 +16,7 @@ import * as yup from 'yup';
 
 import { Div, P } from './style';
 import { SnackBarContext } from '../../../../contexts';
+import callApi from '../../../../libs/utils/api';
 
 class AddDialog extends React.Component {
   constructor() {
@@ -59,10 +60,23 @@ handleClosed = () => {
   this.setState(this.baseState);
 }
 
-onSubmit = (event, value) => {
+onSubmit = async (e, openSnackBar) => {
+  e.preventDefault();
+  const {
+  name, email, password,
+  } = this.state;
+  await callApi('trainee/create', 'POST', {
+    name, email, password,
+  })
+  .then((res) => {
+    console.log(res)
+    openSnackBar('Add successfully', 'Success');
+  })
+  .catch(() => {
+    openSnackBar('Invalid User', 'error');
+  });
   this.setState(this.baseState);
-  value('Successfully Added!', 'success');
-};
+}
 
 getError(field) {
   const { touched } = this.state;
